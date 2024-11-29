@@ -10,8 +10,8 @@ This project is meant to cast some magic using git.
 poetry new gitww-backend-fastapi
 cd gitww-backend-fastapi
 poetry add fastapi uvicorn GitPython fastapi-cors
-vi main.py
-poetry run uvicorn main:app --host 0.0.0.0 --port 3463
+vi app/main.py
+poetry run uvicorn app.main:app --host 0.0.0.0 --port 3463 --reload
 ```
 
 ## Testing
