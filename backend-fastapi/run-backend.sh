@@ -1,4 +1,4 @@
-echo -ne "\033]0;gitww-backend\007"
+echo -ne "\033]0;hub/gitww\007"
 cd /usr/local/hub/gitww/backend-fastapi
 # docker compose up -d
 poetry install
