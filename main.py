@@ -17,7 +17,7 @@ class CommitModification(BaseModel):
 def list_commits(repo_path):
     try:
         repo = git.Repo(repo_path)
-        commits = list(repo.iter_commits('master'))
+        commits = list(repo.iter_commits('main'))
         commit_list = []
         for commit in commits:
             commit_list.append({
