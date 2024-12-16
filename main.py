@@ -7,6 +7,7 @@ from datetime import datetime
 app = FastAPI()
 
 class CommitModification(BaseModel):
+    repo_path: str
     commit_sha: str
     new_author_name: str
     new_author_email: str
@@ -56,9 +57,9 @@ def get_commits(repo_path: str):
     return list_commits(repo_path)
 
 @app.post("/modify-commit/")
-def post_modify_commit(repo_path: str, modification: CommitModification):
+def post_modify_commit(modification: CommitModification):
     return modify_commit(
-        repo_path,
+        modification.repo_path,
         modification.commit_sha,
         modification.new_author_name,
         modification.new_author_email,

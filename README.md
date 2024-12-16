@@ -11,7 +11,7 @@ poetry new gitww-backend-fastapi
 cd gitww-backend-fastapi
 poetry add fastapi uvicorn GitPython
 vi main.py
-uvicorn main:app --host 0.0.0.0 --port 8000
+poetry run uvicorn main:app --host 0.0.0.0 --port 8000
 ```
 
 ## Testing
