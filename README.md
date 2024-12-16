@@ -7,7 +7,15 @@ This project is meant to cast some magic using git.
 ## Setup
 
 ```
-pip install fastapi uvicorn GitPython
+poetry new gitww-backend-fastapi
+cd gitww-backend-fastapi
+poetry add fastapi uvicorn GitPython
+vi main.py
 uvicorn main:app --host 0.0.0.0 --port 8000
 ```
 
+## Testing
+
+```
+curl -X GET "http://localhost:8000/commits/?repo_path=~/hub/gitww-backend-fastapi/fake_repo
+```
