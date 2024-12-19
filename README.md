@@ -1,4 +1,4 @@
-# Git Witchcraft and Wizardry
+# gitww (Git Witchcraft and Wizardry)
 
 Welcome to the git-ww repository. 
 
