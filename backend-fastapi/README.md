@@ -17,5 +17,5 @@ poetry run uvicorn main:app --host 0.0.0.0 --port 8000
 ## Testing
 
 ```
-curl -X GET "http://localhost:8000/commits/?repo_path=~/hub/gitww-backend-fastapi/fake_repo
+curl -X GET "http://localhost:8000/commits/?repo_path=~/hub/gitww-monorepo/gitww-backend-fastapi/fake_repo"
 ```

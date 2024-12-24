@@ -1,1 +1,2 @@
-This is a monorepo for git witchcraft and wizardry.
+This is a monorepo for gitww (Git Witchcraft and Wizardry).
+
