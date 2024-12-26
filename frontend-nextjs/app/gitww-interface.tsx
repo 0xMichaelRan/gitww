@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
+import Link from 'next/link'
 
 // Mock data for recently opened repos
 const recentRepos = [
@@ -159,10 +160,12 @@ export default function GitWW() {
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
-                    <SidebarMenuButton>
-                      <Settings className="mr-2 h-4 w-4" />
-                      Config
-                    </SidebarMenuButton>
+                    <Link href="/settings" passHref>
+                      <SidebarMenuButton>
+                        <Settings className="mr-2 h-4 w-4" />
+                        Settings
+                      </SidebarMenuButton>
+                    </Link>
                   </SidebarMenuItem>
                 </SidebarMenu>
               </SidebarGroupContent>
