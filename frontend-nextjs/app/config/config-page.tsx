@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/sidebar"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import Link from 'next/link'
 
 // Mock data for recently opened repos (same as in main page)
 const recentRepos = [
@@ -71,10 +72,12 @@ export default function ConfigPage() {
           <SidebarHeader>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton size="lg">
-                  <Book className="mr-2 h-4 w-4" />
-                  <span>gitww</span>
-                </SidebarMenuButton>
+                  <Link href="/" passHref>
+                  <SidebarMenuButton size="lg">
+                    <Book className="mr-2 h-4 w-4" />
+                    <span>gitww</span>
+                  </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarHeader>
@@ -104,10 +107,12 @@ export default function ConfigPage() {
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
-                    <SidebarMenuButton>
-                      <Settings className="mr-2 h-4 w-4" />
-                      Config
-                    </SidebarMenuButton>
+                    <Link href="/config" passHref>
+                      <SidebarMenuButton>
+                        <Settings className="mr-2 h-4 w-4" />
+                        Config
+                      </SidebarMenuButton>
+                    </Link>
                   </SidebarMenuItem>
                 </SidebarMenu>
               </SidebarGroupContent>

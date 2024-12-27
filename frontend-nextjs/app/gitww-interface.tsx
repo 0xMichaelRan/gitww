@@ -127,10 +127,12 @@ export default function GitWW() {
           <SidebarHeader>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton size="lg">
-                  <Book className="mr-2 h-4 w-4" />
-                  <span>gitww</span>
-                </SidebarMenuButton>
+                <Link href="/" passHref>
+                  <SidebarMenuButton size="lg">
+                    <Book className="mr-2 h-4 w-4" />
+                    <span>gitww</span>
+                  </SidebarMenuButton>
+                </Link>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarHeader>
