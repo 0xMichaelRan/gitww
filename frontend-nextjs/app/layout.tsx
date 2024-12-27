@@ -1,6 +1,29 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+} from "@/components/ui/sidebar";
+import { Book, GitBranch, FolderOpen, Settings, Edit, Save, Trash2, Plus } from 'lucide-react'
+import Link from "next/link";
+
+
+// Mock data for recently opened repos (same as in main page)
+const recentRepos = [
+  { id: 1, name: 'project-alpha' },
+  { id: 2, name: 'awesome-app' },
+  { id: 3, name: 'secret-experiment' },
+]
+
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -25,11 +48,64 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
+        <SidebarProvider>
+          <div className="flex h-screen">
+            <Sidebar className="w-64">
+              <SidebarHeader>
+                <SidebarMenu>
+                  <SidebarMenuItem>
+                    <Link href="/" passHref>
+                      <SidebarMenuButton size="lg">
+                        <Book className="mr-2 h-4 w-4" />
+                        <span>gitww</span>
+                      </SidebarMenuButton>
+                    </Link>
+                  </SidebarMenuItem>
+                </SidebarMenu>
+              </SidebarHeader>
+              <SidebarContent>
+                <SidebarGroup>
+                  <SidebarGroupLabel>Recent Repositories</SidebarGroupLabel>
+                  <SidebarGroupContent>
+                    <SidebarMenu>
+                      {recentRepos.map(repo => (
+                        <SidebarMenuItem key={repo.id}>
+                          <SidebarMenuButton>
+                            <GitBranch className="mr-2 h-4 w-4" />
+                            {repo.name}
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      ))}
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </SidebarGroup>
+                <SidebarGroup>
+                  <SidebarGroupContent>
+                    <SidebarMenu>
+                      <SidebarMenuItem>
+                        <SidebarMenuButton>
+                          <FolderOpen className="mr-2 h-4 w-4" />
+                          Open Repository
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                      <SidebarMenuItem>
+                        <Link href="/config" passHref>
+                          <SidebarMenuButton>
+                            <Settings className="mr-2 h-4 w-4" />
+                            Config
+                          </SidebarMenuButton>
+                        </Link>
+                      </SidebarMenuItem>
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </SidebarGroup>
+              </SidebarContent>
+            </Sidebar>
+            {children}
+          </div>
+        </SidebarProvider >
       </body>
-    </html>
+    </html >
   );
 }
