@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
+import Link from 'next/link';
 
 // Mock data for commits
 const commits = [
@@ -104,10 +105,19 @@ export default function GitWW() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Commit History</h1>
         <div className="flex space-x-2">
-          <Button variant="outline" onClick={handleModifyClick} disabled={selectedCommits.length !== 1}>
-            <Edit className="mr-2 h-4 w-4" />
-            Modify
-          </Button>
+          {selectedCommits.length > 1 ? (
+            <Link href="/bulk-edit" passHref>
+              <Button variant="outline">
+                <Edit className="mr-2 h-4 w-4" />
+                Modify
+              </Button>
+            </Link>
+          ) : (
+            <Button variant="outline" onClick={handleModifyClick} disabled={selectedCommits.length !== 1}>
+              <Edit className="mr-2 h-4 w-4" />
+              Modify
+            </Button>
+          )}
           <Button variant="outline" onClick={() => console.log('Refresh clicked')}>
             <RefreshCw className="mr-2 h-4 w-4" />
             Refresh
