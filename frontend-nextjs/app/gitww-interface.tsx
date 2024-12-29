@@ -1,22 +1,9 @@
 'use client'
 
 import * as React from 'react'
-import { Book, GitBranch, GitCommit, FolderOpen, Settings, RefreshCw, Edit } from 'lucide-react'
+import { GitCommit, RefreshCw, Edit } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import {
   Dialog,
@@ -28,14 +15,6 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
-import Link from 'next/link'
-
-// Mock data for recently opened repos
-const recentRepos = [
-  { id: 1, name: 'project-alpha' },
-  { id: 2, name: 'awesome-app' },
-  { id: 3, name: 'secret-experiment' },
-]
 
 // Mock data for commits
 const commits = [
@@ -121,119 +100,64 @@ export default function GitWW() {
   }
 
   return (
-    <SidebarProvider>
-      <div className="flex h-screen">
-        <Sidebar className="w-64">
-          <SidebarHeader>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <Link href="/" passHref>
-                  <SidebarMenuButton size="lg">
-                    <Book className="mr-2 h-4 w-4" />
-                    <span>gitww</span>
-                  </SidebarMenuButton>
-                </Link>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarHeader>
-          <SidebarContent>
-            <SidebarGroup>
-              <SidebarGroupLabel>Recent Repositories</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {recentRepos.map(repo => (
-                    <SidebarMenuItem key={repo.id}>
-                      <SidebarMenuButton>
-                        <GitBranch className="mr-2 h-4 w-4" />
-                        {repo.name}
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-            <SidebarGroup>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton>
-                      <FolderOpen className="mr-2 h-4 w-4" />
-                      Open Repository
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <Link href="/config" passHref>
-                      <SidebarMenuButton>
-                        <Settings className="mr-2 h-4 w-4" />
-                        Config
-                      </SidebarMenuButton>
-                    </Link>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          </SidebarContent>
-        </Sidebar>
-        <main className="flex-1 p-6 overflow-hidden">
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold">Commit History</h1>
-            <div className="flex space-x-2">
-              <Button variant="outline" onClick={handleModifyClick} disabled={selectedCommits.length !== 1}>
-                <Edit className="mr-2 h-4 w-4" />
-                Modify
-              </Button>
-              <Button variant="outline" onClick={() => console.log('Refresh clicked')}>
-                <RefreshCw className="mr-2 h-4 w-4" />
-                Refresh
-              </Button>
-            </div>
-          </div>
-          <div className="flex space-x-4">
-            <ScrollArea className="h-[calc(100vh-180px)] w-3/5 rounded-md border">
-              <div className="p-4">
-                {commits.map((commit, index) => (
-                  <div
-                    key={commit.id}
-                    className={`flex items-center p-2 rounded-md cursor-pointer ${
-                      selectedCommits.includes(index) ? 'bg-primary/10' : 'hover:bg-muted'
-                    }`}
-                    onClick={(e) => handleCommitClick(index, e)}
-                  >
-                    <GitCommit className="mr-2 h-4 w-4 flex-shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center">
-                        <span className="font-mono text-sm truncate">{commit.hash}</span>
-                        <span className="ml-2 text-sm text-muted-foreground">{commit.date}</span>
-                      </div>
-                      <p className="text-sm truncate">{commit.message}</p>
-                      <p className="text-xs text-muted-foreground">Author: {commit.author}</p>
-                    </div>
+    <div>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Commit History</h1>
+        <div className="flex space-x-2">
+          <Button variant="outline" onClick={handleModifyClick} disabled={selectedCommits.length !== 1}>
+            <Edit className="mr-2 h-4 w-4" />
+            Modify
+          </Button>
+          <Button variant="outline" onClick={() => console.log('Refresh clicked')}>
+            <RefreshCw className="mr-2 h-4 w-4" />
+            Refresh
+          </Button>
+        </div>
+      </div>
+      <div className="flex space-x-4">
+        <ScrollArea className="h-[calc(100vh-180px)] w-3/5 rounded-md border">
+          <div className="p-4">
+            {commits.map((commit, index) => (
+              <div
+                key={commit.id}
+                className={`flex items-center p-2 rounded-md cursor-pointer ${
+                  selectedCommits.includes(index) ? 'bg-primary/10' : 'hover:bg-muted'
+                }`}
+                onClick={(e) => handleCommitClick(index, e)}
+              >
+                <GitCommit className="mr-2 h-4 w-4 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center">
+                    <span className="font-mono text-sm truncate">{commit.hash}</span>
+                    <span className="ml-2 text-sm text-muted-foreground">{commit.date}</span>
                   </div>
-                ))}
+                  <p className="text-sm truncate">{commit.message}</p>
+                  <p className="text-xs text-muted-foreground">Author: {commit.author}</p>
+                </div>
               </div>
-            </ScrollArea>
-            <div className="w-2/5">
-              <h2 className="text-lg font-semibold mb-4">Contributions in the Last Year</h2>
-              <div className="grid grid-cols-52 gap-1">
-                {contributionsData.map((day, index) => (
-                  <TooltipProvider key={index}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div
-                          className={`w-3 h-3 ${getContributionColor(day.count)}`}
-                          aria-label={`${day.count} contributions on ${day.date}`}
-                        />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{day.count} contributions on {day.date}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                ))}
-              </div>
-            </div>
+            ))}
           </div>
-        </main>
+        </ScrollArea>
+        <div className="w-2/5">
+          <h2 className="text-lg font-semibold mb-4">Contributions in the Last Year</h2>
+          <div className="grid grid-cols-52 gap-1">
+            {contributionsData.map((day, index) => (
+              <TooltipProvider key={index}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div
+                      className={`w-3 h-3 ${getContributionColor(day.count)}`}
+                      aria-label={`${day.count} contributions on ${day.date}`}
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{day.count} contributions on {day.date}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            ))}
+          </div>
+        </div>
       </div>
       <Dialog open={isModifyDialogOpen} onOpenChange={setIsModifyDialogOpen}>
         <DialogContent>
@@ -319,6 +243,6 @@ export default function GitWW() {
           </form>
         </DialogContent>
       </Dialog>
-    </SidebarProvider>
+    </div>
   )
 }

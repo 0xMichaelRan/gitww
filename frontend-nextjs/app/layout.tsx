@@ -13,17 +13,15 @@ import {
   SidebarMenuItem,
   SidebarProvider,
 } from "@/components/ui/sidebar";
-import { Book, GitBranch, FolderOpen, Settings, Edit, Save, Trash2, Plus } from 'lucide-react'
+import { Book, GitBranch, FolderOpen, Settings } from 'lucide-react';
 import Link from "next/link";
 
-
-// Mock data for recently opened repos (same as in main page)
+// Mock data for recently opened repos
 const recentRepos = [
   { id: 1, name: 'project-alpha' },
   { id: 2, name: 'awesome-app' },
   { id: 3, name: 'secret-experiment' },
-]
-
+];
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -102,10 +100,12 @@ export default function RootLayout({
                 </SidebarGroup>
               </SidebarContent>
             </Sidebar>
-            {children}
+            <main className="flex-1 p-6 overflow-hidden">
+              {children}
+            </main>
           </div>
-        </SidebarProvider >
+        </SidebarProvider>
       </body>
-    </html >
+    </html>
   );
 }
