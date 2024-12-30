@@ -48,61 +48,63 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
         <SidebarProvider>
-          <div className="flex h-screen">
-            <Sidebar className="w-64">
-              <SidebarHeader>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <Link href="/" passHref>
-                      <SidebarMenuButton size="lg">
-                        <Book className="mr-2 h-4 w-4" />
-                        <span>gitww</span>
-                      </SidebarMenuButton>
-                    </Link>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarHeader>
-              <SidebarContent>
-                <SidebarGroup>
-                  <SidebarGroupLabel>Recent Repositories</SidebarGroupLabel>
-                  <SidebarGroupContent>
-                    <SidebarMenu>
-                      {recentRepos.map(repo => (
-                        <SidebarMenuItem key={repo.id}>
+          <div className="flex justify-center min-h-screen">
+            <div className="flex h-full max-w-5xl w-full">
+              <Sidebar className="w-64">
+                <SidebarHeader>
+                  <SidebarMenu>
+                    <SidebarMenuItem>
+                      <Link href="/" passHref>
+                        <SidebarMenuButton size="lg">
+                          <Book className="mr-2 h-4 w-4" />
+                          <span>gitww</span>
+                        </SidebarMenuButton>
+                      </Link>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+                </SidebarHeader>
+                <SidebarContent>
+                  <SidebarGroup>
+                    <SidebarGroupLabel>Recent Repositories</SidebarGroupLabel>
+                    <SidebarGroupContent>
+                      <SidebarMenu>
+                        {recentRepos.map(repo => (
+                          <SidebarMenuItem key={repo.id}>
+                            <SidebarMenuButton>
+                              <GitBranch className="mr-2 h-4 w-4" />
+                              {repo.name}
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        ))}
+                      </SidebarMenu>
+                    </SidebarGroupContent>
+                  </SidebarGroup>
+                  <SidebarGroup>
+                    <SidebarGroupContent>
+                      <SidebarMenu>
+                        <SidebarMenuItem>
                           <SidebarMenuButton>
-                            <GitBranch className="mr-2 h-4 w-4" />
-                            {repo.name}
+                            <FolderOpen className="mr-2 h-4 w-4" />
+                            Open Repository
                           </SidebarMenuButton>
                         </SidebarMenuItem>
-                      ))}
-                    </SidebarMenu>
-                  </SidebarGroupContent>
-                </SidebarGroup>
-                <SidebarGroup>
-                  <SidebarGroupContent>
-                    <SidebarMenu>
-                      <SidebarMenuItem>
-                        <SidebarMenuButton>
-                          <FolderOpen className="mr-2 h-4 w-4" />
-                          Open Repository
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                      <SidebarMenuItem>
-                        <Link href="/config" passHref>
-                          <SidebarMenuButton>
-                            <Settings className="mr-2 h-4 w-4" />
-                            Config
-                          </SidebarMenuButton>
-                        </Link>
-                      </SidebarMenuItem>
-                    </SidebarMenu>
-                  </SidebarGroupContent>
-                </SidebarGroup>
-              </SidebarContent>
-            </Sidebar>
-            <main className="flex-1 p-6 overflow-hidden">
-              {children}
-            </main>
+                        <SidebarMenuItem>
+                          <Link href="/config" passHref>
+                            <SidebarMenuButton>
+                              <Settings className="mr-2 h-4 w-4" />
+                              Config
+                            </SidebarMenuButton>
+                          </Link>
+                        </SidebarMenuItem>
+                      </SidebarMenu>
+                    </SidebarGroupContent>
+                  </SidebarGroup>
+                </SidebarContent>
+              </Sidebar>
+              <main className="flex-1 p-6 overflow-hidden">
+                {children}
+              </main>
+            </div>
           </div>
         </SidebarProvider>
       </body>
