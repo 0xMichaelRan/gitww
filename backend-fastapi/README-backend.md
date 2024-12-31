@@ -9,7 +9,7 @@ This project is meant to cast some magic using git.
 ```
 poetry new gitww-backend-fastapi
 cd gitww-backend-fastapi
-poetry add fastapi uvicorn GitPython
+poetry add fastapi uvicorn GitPython fastapi-cors
 vi main.py
 poetry run uvicorn main:app --host 0.0.0.0 --port 8000
 ```

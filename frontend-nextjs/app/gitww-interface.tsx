@@ -43,6 +43,7 @@ const generateContributionsData = () => {
 const contributionsData = generateContributionsData()
 
 export default function GitWW() {
+  const [commits, setCommits] = React.useState([]);
   const [selectedCommits, setSelectedCommits] = React.useState<number[]>([])
   const [lastSelectedIndex, setLastSelectedIndex] = React.useState<number | null>(null)
   const [isModifyDialogOpen, setIsModifyDialogOpen] = React.useState(false)
@@ -54,6 +55,27 @@ export default function GitWW() {
     new_committer_email: '',
     new_date: ''
   })
+
+  React.useEffect(() => {
+    const fetchCommits = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/commits/?repo_path=~/hub/gitww-monorepo/backend-fastapi/fake_repo");
+        const data = await response.json();
+        const formattedCommits = data.map((commit: any, index: number) => ({
+          id: index + 1,
+          hash: commit.sha,
+          message: commit.message,
+          author: commit.author.split(' <')[0], // Extracting name from "Name <email>"
+          date: new Date(commit.date).toISOString().split('T')[0] // Formatting date
+        }));
+        setCommits(formattedCommits);
+      } catch (error) {
+        console.error("Error fetching commits:", error);
+      }
+    };
+
+    fetchCommits();
+  }, []);
 
   const handleCommitClick = (index: number, event: React.MouseEvent) => {
     if (event.metaKey || event.ctrlKey) {
