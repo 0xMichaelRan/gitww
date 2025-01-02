@@ -43,7 +43,7 @@ export default function BulkEditPage() {
 
   return (
     <main className="flex-1 p-6 overflow-auto">
-      <h1 className="text-2xl font-bold mb-4">Bulk Edit Commits</h1>
+      <h1 className="text-2xl font-bold mb-4">Bulk Edit</h1>
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center space-x-2">
           <Popover>
@@ -79,13 +79,13 @@ export default function BulkEditPage() {
             </PopoverContent>
           </Popover>
           <Button onClick={generateRandomDates} disabled={!startDate || !endDate}>
-            Generate Random Dates
+            Randomize
           </Button>
           <Button onClick={() => console.log('Modify Committer')}>
-            Modify Committer
+            Committer
           </Button>
           <Button onClick={() => console.log('Modify Author')}>
-            Modify Author
+            Author
           </Button>
         </div>
       </div>

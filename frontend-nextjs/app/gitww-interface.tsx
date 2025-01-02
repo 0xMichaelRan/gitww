@@ -172,7 +172,7 @@ export default function GitWW() {
         </ScrollArea>
         <div className="w-2/5">
           <h2 className="text-lg font-semibold mb-4">Contributions in the Last Year</h2>
-          <div className="grid grid-cols-52 gap-1">
+          <div className="grid grid-cols-7 gap-1">
             {contributionsData.map((day, index) => (
               <TooltipProvider key={index}>
                 <Tooltip>
