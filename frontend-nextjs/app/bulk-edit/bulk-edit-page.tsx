@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { Book, GitBranch, FolderOpen, Settings, ArrowLeft, Calendar } from 'lucide-react'
+import { ArrowLeft, Calendar } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar as CalendarComponent } from "@/components/ui/calendar"
 import { format } from "date-fns"
+import Link from 'next/link'
 
 // Mock data for selected commits
 const selectedCommits = [
@@ -126,10 +127,12 @@ export default function BulkEditPage() {
         </CardContent>
       </Card>
       <div className="mt-6 flex justify-between">
-        <Button variant="outline" onClick={() => console.log('Navigate back to home')}>
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Home
-        </Button>
+        <Link href="/" passHref>
+          <Button variant="outline">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Home
+          </Button>
+        </Link>
         <Button onClick={() => console.log('Save changes', commits)}>
           Confirm Changes
         </Button>

@@ -79,7 +79,7 @@ export default function GitWW() {
 
   const handleCommitClick = (index: number, event: React.MouseEvent) => {
     if (event.metaKey || event.ctrlKey) {
-      setSelectedCommits(prev => 
+      setSelectedCommits(prev =>
         prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
       )
       setLastSelectedIndex(index)
@@ -152,9 +152,8 @@ export default function GitWW() {
             {commits.map((commit, index) => (
               <div
                 key={commit.id}
-                className={`flex items-center p-2 rounded-md cursor-pointer ${
-                  selectedCommits.includes(index) ? 'bg-primary/10' : 'hover:bg-muted'
-                }`}
+                className={`flex items-center p-2 rounded-md cursor-pointer ${selectedCommits.includes(index) ? 'bg-primary/10' : 'hover:bg-muted'
+                  }`}
                 onClick={(e) => handleCommitClick(index, e)}
               >
                 <GitCommit className="mr-2 h-4 w-4 flex-shrink-0" />
