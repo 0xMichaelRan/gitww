@@ -102,7 +102,7 @@ export default function GitWW() {
 
   const handleModifyClick = () => {
     if (selectedCommits.length === 1) {
-      const selectedCommit = commits[selectedCommits[0]]
+      const selectedCommit = commits[selectedCommits[0]] as { hash: string, date: string }
       setModifyData({
         commit_sha: selectedCommit.hash,
         new_author_name: '',
@@ -149,9 +149,9 @@ export default function GitWW() {
       <div className="flex space-x-4">
         <ScrollArea className="h-[calc(100vh-180px)] w-3/5 rounded-md border">
           <div className="p-4">
-            {commits.map((commit, index) => (
+            {commits.map((commit: { hash: string, date: string, message: string, author: string }, index) => (
               <div
-                key={commit.id}
+                key={commit.hash}
                 className={`flex items-center p-2 rounded-md cursor-pointer ${selectedCommits.includes(index) ? 'bg-primary/10' : 'hover:bg-muted'
                   }`}
                 onClick={(e) => handleCommitClick(index, e)}
