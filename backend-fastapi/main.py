@@ -24,6 +24,7 @@ class CommitModification(BaseModel):
     new_committer_name: str
     new_committer_email: str
     new_date: str
+    new_message: str
 
 def list_commits(repo_path):
     try:
@@ -54,6 +55,7 @@ def modify_commit(modification: CommitModification):
             export GIT_COMMITTER_EMAIL="{modification.new_committer_email}"
             export GIT_AUTHOR_DATE="{modification.new_date}"
             export GIT_COMMITTER_DATE="{modification.new_date}"
+            export GIT_COMMIT_MESSAGE="{modification.new_message}"
         fi
         ' HEAD
         """
@@ -67,13 +69,5 @@ def get_commits(repo_path: str = "~/hub/gitww-backend-fastapi/fake_repo"):
     return list_commits(repo_path)
 
 @app.post("/modify-commit/")
-def post_modify_commit(modification: CommitModification = CommitModification(
-    repo_path="/Users/wei.ran/hub/gitww-backend-fastapi/fake_repo",
-    commit_sha="abc123def456",
-    new_author_name="New Author Name",
-    new_author_email="new_author@example.com",
-    new_committer_name="New Committer Name",
-    new_committer_email="new_committer@example.com",
-    new_date="2023-10-01T12:00:00"
-)):
+def post_modify_commit(modification: CommitModification):
     return modify_commit(modification)

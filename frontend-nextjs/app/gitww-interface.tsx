@@ -53,7 +53,8 @@ export default function GitWW() {
     new_author_email: '',
     new_committer_name: '',
     new_committer_email: '',
-    new_date: ''
+    new_date: '',
+    new_message: ''
   })
 
   React.useEffect(() => {
@@ -109,7 +110,8 @@ export default function GitWW() {
         new_author_email: '',
         new_committer_name: '',
         new_committer_email: '',
-        new_date: selectedCommit.date
+        new_date: selectedCommit.date,
+        new_message: selectedCommit.message
       })
       setIsModifyDialogOpen(true)
     }
@@ -264,6 +266,17 @@ export default function GitWW() {
                   type="datetime-local"
                   value={modifyData.new_date}
                   onChange={(e) => setModifyData({ ...modifyData, new_date: e.target.value })}
+                  className="col-span-3"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="new_message" className="text-right">
+                  New Commit Message
+                </Label>
+                <Input
+                  id="new_message"
+                  value={modifyData.new_message}
+                  onChange={(e) => setModifyData({ ...modifyData, new_message: e.target.value })}
                   className="col-span-3"
                 />
               </div>
