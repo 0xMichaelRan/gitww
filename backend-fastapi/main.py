@@ -34,9 +34,11 @@ def list_commits(repo_path):
         for commit in commits:
             commit_list.append({
                 "sha": commit.hexsha,
-                "author": f"{commit.author.name} <{commit.author.email}>",
+                "author_name": commit.author.name,
+                "author_email": commit.author.email,
+                "committer_name": commit.committer.name,
+                "committer_email": commit.committer.email,
                 "date": datetime.fromtimestamp(commit.committed_date).isoformat(),
-                "committer": f"{commit.committer.name} <{commit.committer.email}>",
                 "message": commit.message.strip()
             })
         return commit_list

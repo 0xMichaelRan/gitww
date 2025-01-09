@@ -17,15 +17,6 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import Link from 'next/link';
 
-// Mock data for commits
-const commits = [
-  { id: 1, hash: 'a1b2c3d', message: 'Initial commit', author: 'Alice', date: '2023-04-01' },
-  { id: 2, hash: 'e4f5g6h', message: 'Add new feature', author: 'Bob', date: '2023-04-02' },
-  { id: 3, hash: 'i7j8k9l', message: 'Fix bug in login', author: 'Charlie', date: '2023-04-03' },
-  { id: 4, hash: 'm1n2o3p', message: 'Update documentation', author: 'David', date: '2023-04-04' },
-  { id: 5, hash: 'q4r5s6t', message: 'Refactor code', author: 'Eve', date: '2023-04-05' },
-]
-
 // Generate mock data for the contributions graph
 const generateContributionsData = () => {
   const data = []
@@ -43,7 +34,7 @@ const generateContributionsData = () => {
 const contributionsData = generateContributionsData()
 
 export default function GitWW() {
-  const [commits, setCommits] = React.useState([]);
+  const [commits, setCommits] = React.useState([])
   const [selectedCommits, setSelectedCommits] = React.useState<number[]>([])
   const [lastSelectedIndex, setLastSelectedIndex] = React.useState<number | null>(null)
   const [isModifyDialogOpen, setIsModifyDialogOpen] = React.useState(false)
@@ -62,14 +53,7 @@ export default function GitWW() {
       try {
         const response = await fetch("http://localhost:8000/commits/?repo_path=~/hub/gitww-monorepo/backend-fastapi/fake_repo");
         const data = await response.json();
-        const formattedCommits = data.map((commit: any, index: number) => ({
-          id: index + 1,
-          hash: commit.sha,
-          message: commit.message,
-          author: commit.author.split(' <')[0], // Extracting name from "Name <email>"
-          date: new Date(commit.date).toISOString().split('T')[0] // Formatting date
-        }));
-        setCommits(formattedCommits);
+        setCommits(data);
       } catch (error) {
         console.error("Error fetching commits:", error);
       }
@@ -103,26 +87,45 @@ export default function GitWW() {
 
   const handleModifyClick = () => {
     if (selectedCommits.length === 1) {
-      const selectedCommit = commits[selectedCommits[0]] as { hash: string, date: string }
+      const selectedCommit = commits[selectedCommits[0]];
       setModifyData({
-        commit_sha: selectedCommit.hash,
-        new_author_name: '',
-        new_author_email: '',
-        new_committer_name: '',
-        new_committer_email: '',
+        commit_sha: selectedCommit.sha,
+        new_author_name: selectedCommit.author_name,
+        new_author_email: selectedCommit.author_email,
+        new_committer_name: selectedCommit.committer_name,
+        new_committer_email: selectedCommit.committer_email,
         new_date: selectedCommit.date,
         new_message: selectedCommit.message
-      })
-      setIsModifyDialogOpen(true)
+      });
+      setIsModifyDialogOpen(true);
     }
-  }
+  };
 
-  const handleModifySubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log('Modified commit data:', modifyData)
-    setIsModifyDialogOpen(false)
-    // Here you would typically send this data to your backend to actually modify the commit
-  }
+  const handleModifySubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    console.log('Submitting data:', modifyData);
+
+    try {
+      const response = await fetch('http://localhost:8000/modify-commit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(modifyData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`Error: ${response.statusText} - ${JSON.stringify(errorData)}`);
+      }
+
+      const result = await response.json();
+      console.log('Success:', result);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
   return (
     <div>
