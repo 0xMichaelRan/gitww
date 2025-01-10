@@ -39,6 +39,7 @@ export default function GitWW() {
   const [lastSelectedIndex, setLastSelectedIndex] = React.useState<number | null>(null)
   const [isModifyDialogOpen, setIsModifyDialogOpen] = React.useState(false)
   const [modifyData, setModifyData] = React.useState({
+    repo_path: '~/hub/gitww-monorepo/backend-fastapi/fake_repo',
     commit_sha: '',
     new_author_name: '',
     new_author_email: '',
@@ -89,6 +90,7 @@ export default function GitWW() {
     if (selectedCommits.length === 1) {
       const selectedCommit = commits[selectedCommits[0]];
       setModifyData({
+        ...modifyData,
         commit_sha: selectedCommit.sha,
         new_author_name: selectedCommit.author_name,
         new_author_email: selectedCommit.author_email,
