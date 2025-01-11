@@ -39,7 +39,7 @@ export default function GitWW() {
   const [lastSelectedIndex, setLastSelectedIndex] = React.useState<number | null>(null)
   const [isModifyDialogOpen, setIsModifyDialogOpen] = React.useState(false)
   const [modifyData, setModifyData] = React.useState({
-    repo_path: '~/hub/gitww-monorepo/backend-fastapi/fake_repo',
+    repo_path: process.env.NEXT_PUBLIC_REPO_PATH || '',
     commit_sha: '',
     new_author_name: '',
     new_author_email: '',
@@ -52,7 +52,7 @@ export default function GitWW() {
   React.useEffect(() => {
     const fetchCommits = async () => {
       try {
-        const response = await fetch("http://localhost:8000/commits/?repo_path=~/hub/gitww-monorepo/backend-fastapi/fake_repo");
+        const response = await fetch(`http://localhost:8000/commits/?repo_path=${encodeURIComponent(process.env.NEXT_PUBLIC_REPO_PATH || '')}`);
         const data = await response.json();
         setCommits(data);
       } catch (error) {

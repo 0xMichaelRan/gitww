@@ -4,6 +4,11 @@ import git
 import subprocess
 from datetime import datetime
 from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = FastAPI()
 
@@ -67,7 +72,10 @@ def modify_commit(modification: CommitModification):
         raise HTTPException(status_code=500, detail=f"Error modifying commit: {e}")
 
 @app.get("/commits/")
-def get_commits(repo_path: str = "~/hub/gitww-backend-fastapi/fake_repo"):
+def get_commits(repo_path: str = None):
+    repo_path = os.getenv("REPO_PATH")
+    if not repo_path:
+        raise HTTPException(status_code=500, detail="REPO_PATH environment variable is not set.")
     return list_commits(repo_path)
 
 @app.post("/modify-commit/")
