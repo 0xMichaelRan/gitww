@@ -38,6 +38,7 @@ export default function GitWW() {
   const [selectedCommits, setSelectedCommits] = React.useState<number[]>([])
   const [lastSelectedIndex, setLastSelectedIndex] = React.useState<number | null>(null)
   const [isModifyDialogOpen, setIsModifyDialogOpen] = React.useState(false)
+  const [loading, setLoading] = React.useState(false)
   const [modifyData, setModifyData] = React.useState({
     repo_path: process.env.NEXT_PUBLIC_REPO_PATH || '',
     commit_sha: '',
@@ -105,6 +106,7 @@ export default function GitWW() {
 
   const handleModifySubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    setLoading(true);
 
     console.log('Submitting data:', modifyData);
 
@@ -124,8 +126,11 @@ export default function GitWW() {
 
       const result = await response.json();
       console.log('Success:', result);
+      setIsModifyDialogOpen(false);
     } catch (error) {
       console.error('Error:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -142,7 +147,7 @@ export default function GitWW() {
               </Button>
             </Link>
           ) : (
-            <Button variant="outline" onClick={handleModifyClick} disabled={selectedCommits.length !== 1}>
+            <Button variant="outline" onClick={handleModifyClick} disabled={selectedCommits.length !== 1 || loading}>
               <Edit className="mr-2 h-4 w-4" />
               Modify
             </Button>
@@ -216,6 +221,7 @@ export default function GitWW() {
                   value={modifyData.commit_sha}
                   onChange={(e) => setModifyData({ ...modifyData, commit_sha: e.target.value })}
                   className="col-span-3"
+                  disabled={loading}
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
@@ -227,6 +233,7 @@ export default function GitWW() {
                   value={modifyData.new_author_name}
                   onChange={(e) => setModifyData({ ...modifyData, new_author_name: e.target.value })}
                   className="col-span-3"
+                  disabled={loading}
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
@@ -238,6 +245,7 @@ export default function GitWW() {
                   value={modifyData.new_author_email}
                   onChange={(e) => setModifyData({ ...modifyData, new_author_email: e.target.value })}
                   className="col-span-3"
+                  disabled={loading}
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
@@ -249,6 +257,7 @@ export default function GitWW() {
                   value={modifyData.new_committer_name}
                   onChange={(e) => setModifyData({ ...modifyData, new_committer_name: e.target.value })}
                   className="col-span-3"
+                  disabled={loading}
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
@@ -260,6 +269,7 @@ export default function GitWW() {
                   value={modifyData.new_committer_email}
                   onChange={(e) => setModifyData({ ...modifyData, new_committer_email: e.target.value })}
                   className="col-span-3"
+                  disabled={loading}
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
@@ -272,6 +282,7 @@ export default function GitWW() {
                   value={modifyData.new_date}
                   onChange={(e) => setModifyData({ ...modifyData, new_date: e.target.value })}
                   className="col-span-3"
+                  disabled={loading}
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
@@ -283,11 +294,14 @@ export default function GitWW() {
                   value={modifyData.new_message}
                   onChange={(e) => setModifyData({ ...modifyData, new_message: e.target.value })}
                   className="col-span-3"
+                  disabled={loading}
                 />
               </div>
             </div>
             <DialogFooter>
-              <Button type="submit">Save changes</Button>
+              <Button type="submit" disabled={loading}>
+                {loading ? 'Saving...' : 'Save changes'}
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>
