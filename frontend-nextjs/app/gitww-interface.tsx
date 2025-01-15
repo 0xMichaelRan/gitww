@@ -108,8 +108,6 @@ export default function GitWW() {
     event.preventDefault();
     setLoading(true);
 
-    console.log('Submitting data:', modifyData);
-
     try {
       const response = await fetch('http://localhost:8000/modify-commit', {
         method: 'POST',
@@ -124,8 +122,9 @@ export default function GitWW() {
         throw new Error(`Error: ${response.statusText} - ${JSON.stringify(errorData)}`);
       }
 
-      const result = await response.json();
-      console.log('Success:', result);
+      const updatedCommits = await response.json();
+      console.log('Updated commits:', updatedCommits);
+      setCommits(updatedCommits);
       setIsModifyDialogOpen(false);
     } catch (error) {
       console.error('Error:', error);
@@ -219,9 +218,8 @@ export default function GitWW() {
                 <Input
                   id="commit_sha"
                   value={modifyData.commit_sha}
-                  onChange={(e) => setModifyData({ ...modifyData, commit_sha: e.target.value })}
                   className="col-span-3"
-                  disabled={loading}
+                  disabled
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">

@@ -67,7 +67,9 @@ def modify_commit(modification: CommitModification):
         ' HEAD
         """
         subprocess.run(rebase_cmd, cwd=modification.repo_path, shell=True, check=True)
-        return f"Modified commit {modification.commit_sha} successfully."
+        updated_commits = list_commits(modification.repo_path)
+        print("Updated commits:", updated_commits)  # Debug statement
+        return updated_commits
     except subprocess.CalledProcessError as e:
         raise HTTPException(status_code=500, detail=f"Error modifying commit: {e}")
 
