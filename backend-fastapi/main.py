@@ -21,6 +21,7 @@ app.add_middleware(
     allow_headers=["*"],  # Allow all headers
 )
 
+
 class CommitModification(BaseModel):
     repo_path: str
     commit_sha: str
@@ -31,24 +32,28 @@ class CommitModification(BaseModel):
     new_date: str
     new_message: str
 
+
 def list_commits(repo_path):
     try:
         repo = git.Repo(repo_path)
-        commits = list(repo.iter_commits('main'))
+        commits = list(repo.iter_commits("main"))
         commit_list = []
         for commit in commits:
-            commit_list.append({
-                "sha": commit.hexsha,
-                "author_name": commit.author.name,
-                "author_email": commit.author.email,
-                "committer_name": commit.committer.name,
-                "committer_email": commit.committer.email,
-                "date": datetime.fromtimestamp(commit.committed_date).isoformat(),
-                "message": commit.message.strip()
-            })
+            commit_list.append(
+                {
+                    "sha": commit.hexsha,
+                    "author_name": commit.author.name,
+                    "author_email": commit.author.email,
+                    "committer_name": commit.committer.name,
+                    "committer_email": commit.committer.email,
+                    "date": datetime.fromtimestamp(commit.committed_date).isoformat(),
+                    "message": commit.message.strip(),
+                }
+            )
         return commit_list
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error listing commits: {e}")
+
 
 def modify_commit(modification: CommitModification):
     try:
@@ -66,6 +71,7 @@ def modify_commit(modification: CommitModification):
         fi
         ' HEAD
         """
+        print("Executing command:", rebase_cmd)  # Debug statement
         subprocess.run(rebase_cmd, cwd=modification.repo_path, shell=True, check=True)
         updated_commits = list_commits(modification.repo_path)
         print("Updated commits:", updated_commits)  # Debug statement
@@ -73,12 +79,16 @@ def modify_commit(modification: CommitModification):
     except subprocess.CalledProcessError as e:
         raise HTTPException(status_code=500, detail=f"Error modifying commit: {e}")
 
+
 @app.get("/commits/")
 def get_commits(repo_path: str = None):
     repo_path = os.getenv("REPO_PATH")
     if not repo_path:
-        raise HTTPException(status_code=500, detail="REPO_PATH environment variable is not set.")
+        raise HTTPException(
+            status_code=500, detail="REPO_PATH environment variable is not set."
+        )
     return list_commits(repo_path)
+
 
 @app.post("/modify-commit/")
 def post_modify_commit(modification: CommitModification):

@@ -109,6 +109,7 @@ export default function GitWW() {
     setLoading(true);
 
     try {
+      console.log('Submitting data:', modifyData);
       const response = await fetch('http://localhost:8000/modify-commit', {
         method: 'POST',
         headers: {
@@ -123,7 +124,6 @@ export default function GitWW() {
       }
 
       const updatedCommits = await response.json();
-      console.log('Updated commits:', updatedCommits);
       setCommits(updatedCommits);
       setIsModifyDialogOpen(false);
     } catch (error) {
@@ -224,7 +224,7 @@ export default function GitWW() {
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="new_author_name" className="text-right">
-                  New Author Name
+                  Author
                 </Label>
                 <Input
                   id="new_author_name"
@@ -236,7 +236,7 @@ export default function GitWW() {
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="new_author_email" className="text-right">
-                  New Author Email
+                  Author Email
                 </Label>
                 <Input
                   id="new_author_email"
@@ -248,7 +248,7 @@ export default function GitWW() {
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="new_committer_name" className="text-right">
-                  New Committer Name
+                  Committer
                 </Label>
                 <Input
                   id="new_committer_name"
@@ -260,7 +260,7 @@ export default function GitWW() {
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="new_committer_email" className="text-right">
-                  New Committer Email
+                  Committer Email
                 </Label>
                 <Input
                   id="new_committer_email"
@@ -272,7 +272,7 @@ export default function GitWW() {
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="new_date" className="text-right">
-                  New Date
+                  Commit Date
                 </Label>
                 <Input
                   id="new_date"
@@ -285,7 +285,7 @@ export default function GitWW() {
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="new_message" className="text-right">
-                  New Commit Message
+                  Commit Message
                 </Label>
                 <Input
                   id="new_message"
