@@ -39,6 +39,7 @@ export default function GitWW() {
   const [lastSelectedIndex, setLastSelectedIndex] = React.useState<number | null>(null)
   const [isModifyDialogOpen, setIsModifyDialogOpen] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
+  const [selectedCommit, setSelectedCommit] = React.useState(null)
   const [modifyData, setModifyData] = React.useState({
     repo_path: process.env.NEXT_PUBLIC_REPO_PATH || '',
     commit_sha: '',
@@ -91,7 +92,7 @@ export default function GitWW() {
     if (selectedCommits.length === 1) {
       const selectedCommit = commits[selectedCommits[0]];
       setModifyData({
-        ...modifyData,
+        repo_path: process.env.NEXT_PUBLIC_REPO_PATH || '',
         commit_sha: selectedCommit.sha,
         new_author_name: selectedCommit.author_name,
         new_author_email: selectedCommit.author_email,
@@ -109,7 +110,6 @@ export default function GitWW() {
     setLoading(true);
 
     try {
-      console.log('Submitting data:', modifyData);
       const response = await fetch('http://localhost:8000/modify-commit', {
         method: 'POST',
         headers: {
@@ -131,6 +131,20 @@ export default function GitWW() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const getCommitsFromLastYear = () => {
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+
+    return commits.filter(commit => {
+      const commitDate = new Date(commit.date);
+      return commitDate >= oneYearAgo;
+    });
+  };
+
+  const handleContributionClick = (commit) => {
+    setSelectedCommit(commit);
   };
 
   return (
@@ -183,22 +197,32 @@ export default function GitWW() {
         <div className="w-2/5">
           <h2 className="text-lg font-semibold mb-4">Contributions in the Last Year</h2>
           <div className="grid grid-cols-7 gap-1">
-            {contributionsData.map((day, index) => (
+            {getCommitsFromLastYear().map((commit, index) => (
               <TooltipProvider key={index}>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <div
-                      className={`w-3 h-3 ${getContributionColor(day.count)}`}
-                      aria-label={`${day.count} contributions on ${day.date}`}
+                      className={`w-3 h-3 ${getContributionColor(1)}`}
+                      aria-label={`1 contribution on ${commit.date}`}
+                      onClick={() => handleContributionClick(commit)}
                     />
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>{day.count} contributions on {day.date}</p>
+                    <p>1 contribution on {commit.date}</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
             ))}
           </div>
+          {selectedCommit && (
+            <div className="mt-4 p-4 border rounded-md">
+              <h3 className="text-md font-semibold">Selected Commit Details</h3>
+              <p><strong>Date:</strong> {selectedCommit.date}</p>
+              <p><strong>Message:</strong> {selectedCommit.message}</p>
+              <p><strong>Author:</strong> {selectedCommit.author_name}</p>
+              <p><strong>Email:</strong> {selectedCommit.author_email}</p>
+            </div>
+          )}
         </div>
       </div>
       <Dialog open={isModifyDialogOpen} onOpenChange={setIsModifyDialogOpen}>
