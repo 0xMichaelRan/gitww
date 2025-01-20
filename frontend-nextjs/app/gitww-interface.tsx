@@ -174,7 +174,7 @@ export default function GitWW() {
       <div className="flex space-x-4">
         <ScrollArea className="h-[calc(100vh-180px)] w-3/5 rounded-md border">
           <div className="p-4">
-            {commits.map((commit: { hash: string, date: string, message: string, author: string }, index) => (
+            {commits.map((commit: { hash: string, date: string, message: string, author_name: string, author_email: string, committer_name: string, committer_email: string }, index) => (
               <div
                 key={commit.hash}
                 className={`flex items-center p-2 rounded-md cursor-pointer ${selectedCommits.includes(index) ? 'bg-primary/10' : 'hover:bg-muted'
@@ -188,7 +188,7 @@ export default function GitWW() {
                     <span className="ml-2 text-sm text-muted-foreground">{commit.date}</span>
                   </div>
                   <p className="text-sm truncate">{commit.message}</p>
-                  <p className="text-xs text-muted-foreground">Author: {commit.author}</p>
+                  <p className="text-xs text-muted-foreground">Author: {commit.author_name}</p>
                 </div>
               </div>
             ))}
