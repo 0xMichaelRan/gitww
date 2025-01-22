@@ -1,6 +1,5 @@
 'use client'
 
-import * as React from 'react'
 import { Book, GitBranch, FolderOpen, Settings, Edit, Save, Trash2, Plus } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,6 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import Link from 'next/link'
+import React, { useEffect } from 'react';
 
 // Mock data for editable text and code snippets
 const initialSnippets = [
@@ -18,12 +18,25 @@ const initialSnippets = [
 ]
 
 export default function ConfigPage() {
-  const [masterDirectory, setMasterDirectory] = React.useState('/path/to/repos')
+  const [masterDirectory, setMasterDirectory] = React.useState<string>('')
   const [defaultUsername, setDefaultUsername] = React.useState('John Doe')
   const [defaultEmail, setDefaultEmail] = React.useState('john.doe@example.com')
   const [snippets, setSnippets] = React.useState(initialSnippets)
   const [editingSnippet, setEditingSnippet] = React.useState<number | null>(null)
   const [nextSnippetId, setNextSnippetId] = React.useState(4)
+
+  // Load masterDirectory from local storage on component mount
+  useEffect(() => {
+    const savedDirectory = localStorage.getItem('masterDirectory')
+    if (savedDirectory) {
+      setMasterDirectory(savedDirectory)
+    }
+  }, [])
+
+  // Save masterDirectory to local storage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('masterDirectory', masterDirectory)
+  }, [masterDirectory])
 
   const handleSnippetEdit = (id: number) => {
     setEditingSnippet(id)
