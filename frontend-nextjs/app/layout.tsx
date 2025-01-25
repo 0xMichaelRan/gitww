@@ -3,10 +3,6 @@ import localFont from "next/font/local";
 import "./globals.css";
 import {
   Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -15,13 +11,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Book, GitBranch, FolderOpen, Settings } from 'lucide-react';
 import Link from "next/link";
-
-// Mock data for recently opened repos
-const recentRepos = [
-  { id: 1, name: 'project-alpha' },
-  { id: 2, name: 'awesome-app' },
-  { id: 3, name: 'secret-experiment' },
-];
+import { SidebarContents } from '@/app/components/SidebarContents';
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -63,43 +53,7 @@ export default function RootLayout({
                     </SidebarMenuItem>
                   </SidebarMenu>
                 </SidebarHeader>
-                <SidebarContent>
-                  <SidebarGroup>
-                    <SidebarGroupLabel>Recent Repositories</SidebarGroupLabel>
-                    <SidebarGroupContent>
-                      <SidebarMenu>
-                        {recentRepos.map(repo => (
-                          <SidebarMenuItem key={repo.id}>
-                            <SidebarMenuButton>
-                              <GitBranch className="mr-2 h-4 w-4" />
-                              {repo.name}
-                            </SidebarMenuButton>
-                          </SidebarMenuItem>
-                        ))}
-                      </SidebarMenu>
-                    </SidebarGroupContent>
-                  </SidebarGroup>
-                  <SidebarGroup>
-                    <SidebarGroupContent>
-                      <SidebarMenu>
-                        <SidebarMenuItem>
-                          <SidebarMenuButton>
-                            <FolderOpen className="mr-2 h-4 w-4" />
-                            Open Repository
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
-                        <SidebarMenuItem>
-                          <Link href="/config" passHref>
-                            <SidebarMenuButton>
-                              <Settings className="mr-2 h-4 w-4" />
-                              Config
-                            </SidebarMenuButton>
-                          </Link>
-                        </SidebarMenuItem>
-                      </SidebarMenu>
-                    </SidebarGroupContent>
-                  </SidebarGroup>
-                </SidebarContent>
+                <SidebarContents />
               </Sidebar>
               <main className="flex-1 p-6 overflow-hidden">
                 {children}
