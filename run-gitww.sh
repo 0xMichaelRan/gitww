@@ -1,4 +1,4 @@
-open -a iTerm ~/hub/gitww-monorepo/frontend-nextjs/run-frontend.sh \
-& cursor ~/hub/gitww-monorepo/ \
-& open -a iTerm ~/hub/gitww-monorepo/backend-fastapi/run-backend.sh \
+open -a iTerm /usr/local/hub/gitww/frontend-nextjs/run-frontend.sh \
+& cursor /usr/local/hub/gitww/ \
+& open -a iTerm /usr/local/hub/gitww/backend-fastapi/run-backend.sh \
 & open "http://localhost:3000/"

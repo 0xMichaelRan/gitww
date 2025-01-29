@@ -1,3 +1,4 @@
 echo -ne "\033]0;gitww-frontend\007"
-cd ~/hub/gitww-monorepo/frontend-nextjs
+cd /usr/local/hub/gitww/frontend-nextjs
+pnpm install
 npm run dev
