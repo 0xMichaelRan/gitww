@@ -33,8 +33,19 @@ const generateContributionsData = () => {
 
 const contributionsData = generateContributionsData()
 
+// Add interface for commit type
+interface Commit {
+  hash: string;
+  date: string;
+  message: string;
+  author_name: string;
+  author_email: string;
+  committer_name: string;
+  committer_email: string;
+}
+
 export default function GitWW() {
-  const [commits, setCommits] = React.useState([])
+  const [commits, setCommits] = React.useState<Commit[]>([])
   const [selectedCommits, setSelectedCommits] = React.useState<number[]>([])
   const [lastSelectedIndex, setLastSelectedIndex] = React.useState<number | null>(null)
   const [isModifyDialogOpen, setIsModifyDialogOpen] = React.useState(false)
@@ -174,24 +185,31 @@ export default function GitWW() {
       <div className="flex space-x-4">
         <ScrollArea className="h-[calc(100vh-180px)] w-3/5 rounded-md border">
           <div className="p-4">
-            {commits.map((commit: { hash: string, date: string, message: string, author_name: string, author_email: string, committer_name: string, committer_email: string }, index) => (
-              <div
-                key={commit.hash}
-                className={`flex items-center p-2 rounded-md cursor-pointer ${selectedCommits.includes(index) ? 'bg-primary/10' : 'hover:bg-muted'
+            {Array.isArray(commits) && commits.length > 0 ? (
+              commits.map((commit, index) => (
+                <div
+                  key={commit.hash}
+                  className={`flex items-center p-2 rounded-md cursor-pointer ${
+                    selectedCommits.includes(index) ? 'bg-primary/10' : 'hover:bg-muted'
                   }`}
-                onClick={(e) => handleCommitClick(index, e)}
-              >
-                <GitCommit className="mr-2 h-4 w-4 flex-shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center">
-                    <span className="font-mono text-sm truncate">{commit.hash}</span>
-                    <span className="ml-2 text-sm text-muted-foreground">{commit.date}</span>
+                  onClick={(e) => handleCommitClick(index, e)}
+                >
+                  <GitCommit className="mr-2 h-4 w-4 flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center">
+                      <span className="font-mono text-sm truncate">{commit.hash}</span>
+                      <span className="ml-2 text-sm text-muted-foreground">{commit.date}</span>
+                    </div>
+                    <p className="text-sm truncate">{commit.message}</p>
+                    <p className="text-xs text-muted-foreground">Author: {commit.author_name}</p>
                   </div>
-                  <p className="text-sm truncate">{commit.message}</p>
-                  <p className="text-xs text-muted-foreground">Author: {commit.author_name}</p>
                 </div>
+              ))
+            ) : (
+              <div className="text-center p-4 text-muted-foreground">
+                {loading ? 'Loading commits...' : 'No commits found'}
               </div>
-            ))}
+            )}
           </div>
         </ScrollArea>
         <div className="w-2/5">
