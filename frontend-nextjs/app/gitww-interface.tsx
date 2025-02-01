@@ -64,9 +64,13 @@ export default function GitWW() {
 
   React.useEffect(() => {
     const fetchCommits = async () => {
+      console.log('API URL:', process.env.NEXT_PUBLIC_API_URL);
+      console.log('Repo Path:', process.env.NEXT_PUBLIC_REPO_PATH);
+      
       try {
-        const response = await fetch(`http://localhost:8000/commits/?repo_path=${encodeURIComponent(process.env.NEXT_PUBLIC_REPO_PATH || '')}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/commits/?repo_path=${encodeURIComponent(process.env.NEXT_PUBLIC_REPO_PATH || '')}`);
         const data = await response.json();
+        console.log('Fetched commits data:', data);
         setCommits(data);
       } catch (error) {
         console.error("Error fetching commits:", error);
@@ -121,7 +125,7 @@ export default function GitWW() {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:8000/modify-commit', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/modify-commit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

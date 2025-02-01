@@ -11,11 +11,11 @@ poetry new gitww-backend-fastapi
 cd gitww-backend-fastapi
 poetry add fastapi uvicorn GitPython fastapi-cors
 vi main.py
-poetry run uvicorn main:app --host 0.0.0.0 --port 8000
+poetry run uvicorn main:app --host 0.0.0.0 --port 3463
 ```
 
 ## Testing
 
 ```
-curl -X GET "http://localhost:8000/commits/?repo_path=/usr/local/hub/gitww/backend-fastapi/fake_repo"
+curl -X GET "http://localhost:3463/commits/?repo_path=/usr/local/hub/gitww/backend-fastapi/fake_repo"
 ```
