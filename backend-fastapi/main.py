@@ -6,7 +6,7 @@ from datetime import datetime
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import os
-
+ 
 # Load environment variables from .env file
 load_dotenv()
 
@@ -15,10 +15,10 @@ app = FastAPI()
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3462"],  # Allow requests from this origin
+    allow_origins=["http://localhost:3462"],
     allow_credentials=True,
-    allow_methods=["*"],  # Allow all methods (GET, POST, etc.)
-    allow_headers=["*"],  # Allow all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
@@ -81,12 +81,9 @@ def modify_commit(modification: CommitModification):
 
 
 @app.get("/commits/")
-def get_commits(repo_path: str = None):
-    repo_path = os.getenv("REPO_PATH")
+def get_commits(repo_path: str):
     if not repo_path:
-        raise HTTPException(
-            status_code=500, detail="REPO_PATH environment variable is not set."
-        )
+        raise HTTPException(status_code=400, detail="repo_path parameter is required")
     return list_commits(repo_path)
 
 
