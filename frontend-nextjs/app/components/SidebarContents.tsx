@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { GitBranch, FolderOpen, Settings } from 'lucide-react';
 import {
@@ -11,16 +11,25 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-} from "@/components/ui/sidebar";
-
-// Mock data for recently opened repos
-const recentRepos = [
-    { id: 1, name: 'project-alpha' },
-    { id: 2, name: 'awesome-app' },
-    { id: 3, name: 'secret-experiment' },
-];
+} from "@/components/ui/sidebar"; 
 
 export function SidebarContents() {
+    const [recentRepos, setRecentRepos] = useState<string[]>([]);
+
+    useEffect(() => {
+        const fetchRecentRepos = async () => {
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/recent-repos/`);
+                const data = await response.json();
+                setRecentRepos(data);
+            } catch (error) {
+                console.error("Error fetching recent repos:", error);
+            }
+        };
+
+        fetchRecentRepos();
+    }, []); // Empty dependency array means this runs once on mount
+
     // Add state to track the selected directory
     const [selectedDirectory, setSelectedDirectory] = React.useState<string | null>(
         typeof window !== 'undefined' ? localStorage.getItem('masterDirectory') : null
@@ -45,10 +54,15 @@ export function SidebarContents() {
                 <SidebarGroupContent>
                     <SidebarMenu>
                         {recentRepos.map(repo => (
-                            <SidebarMenuItem key={repo.id}>
-                                <SidebarMenuButton>
+                            <SidebarMenuItem key={`${repo}-${Math.random()}`}>
+                                <SidebarMenuButton onClick={() => {
+                                    console.log(`Opening repo: ${repo}`);
+                                    // Add your repo opening logic here
+                                    localStorage.setItem('masterDirectory', repo);
+                                    setSelectedDirectory(repo);
+                                }}>
                                     <GitBranch className="mr-2 h-4 w-4" />
-                                    {repo.name}
+                                    {repo}
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
                         ))}
