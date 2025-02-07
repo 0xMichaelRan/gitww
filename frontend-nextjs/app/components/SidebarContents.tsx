@@ -11,7 +11,7 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-} from "@/components/ui/sidebar"; 
+} from "@/components/ui/sidebar";
 
 export function SidebarContents() {
     const [recentRepos, setRecentRepos] = useState<string[]>([]);
@@ -55,14 +55,9 @@ export function SidebarContents() {
                     <SidebarMenu>
                         {recentRepos.map(repo => (
                             <SidebarMenuItem key={`${repo}-${Math.random()}`}>
-                                <SidebarMenuButton onClick={() => {
-                                    console.log(`Opening repo: ${repo}`);
-                                    // Add your repo opening logic here
-                                    localStorage.setItem('masterDirectory', repo);
-                                    setSelectedDirectory(repo);
-                                }}>
+                                <SidebarMenuButton>
                                     <GitBranch className="mr-2 h-4 w-4" />
-                                    {repo}
+                                    {repo.split('hub/')[1]?.replace(/\/$/, '')}
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
                         ))}
