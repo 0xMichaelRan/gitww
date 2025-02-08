@@ -1,9 +1,9 @@
+from fastapi import APIRouter
 import json
 from pathlib import Path
+from ..config.paths import DATA_DIR
 
-# Create a data directory in your project root
-DATA_DIR = Path(__file__).parent / "data"
-DATA_DIR.mkdir(exist_ok=True)
+router = APIRouter(prefix="/recent-repos", tags=["recent_repos"])
 
 RECENT_REPOS_FILE = DATA_DIR / "recent_repos.json"
 
@@ -22,4 +22,8 @@ def save_recent_repo(repo_path: str, max_entries: int = 10):
     repos = repos[:max_entries]
     
     with open(RECENT_REPOS_FILE, 'w') as f:
-        json.dump(repos, f, indent=2) 
+        json.dump(repos, f, indent=2)
+
+@router.get("/")
+async def get_recent_repos():
+    return load_recent_repos() 

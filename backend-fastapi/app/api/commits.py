@@ -1,38 +1,11 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from fastapi import APIRouter, HTTPException
+from ..models.commit import CommitModification
 import git
-import subprocess
 from datetime import datetime
-from fastapi.middleware.cors import CORSMiddleware
-from dotenv import load_dotenv
-import os
-from recent_repos import load_recent_repos, save_recent_repo
+import subprocess
+from ..api.recent_repos import save_recent_repo
 
-# Load environment variables from .env file
-load_dotenv()
-
-app = FastAPI()
-
-# Add CORS middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3462"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-
-class CommitModification(BaseModel):
-    repo_path: str
-    commit_sha: str
-    new_author_name: str
-    new_author_email: str
-    new_committer_name: str
-    new_committer_email: str
-    new_date: str
-    new_message: str
-
+router = APIRouter(prefix="/commits", tags=["commits"])
 
 def list_commits(repo_path):
     try:
@@ -55,7 +28,6 @@ def list_commits(repo_path):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error listing commits: {e}")
 
-
 def modify_commit(modification: CommitModification):
     try:
         rebase_cmd = f"""
@@ -72,29 +44,18 @@ def modify_commit(modification: CommitModification):
         fi
         ' HEAD
         """
-        print("Executing command:", rebase_cmd)  # Debug statement
         subprocess.run(rebase_cmd, cwd=modification.repo_path, shell=True, check=True)
-        updated_commits = list_commits(modification.repo_path)
-        print("Updated commits:", updated_commits)  # Debug statement
-        return updated_commits
+        return list_commits(modification.repo_path)
     except subprocess.CalledProcessError as e:
         raise HTTPException(status_code=500, detail=f"Error modifying commit: {e}")
 
-
-@app.get("/commits/")
-def get_commits(repo_path: str):
+@router.get("/")
+async def get_commits(repo_path: str):
     if not repo_path:
         raise HTTPException(status_code=400, detail="repo_path parameter is required")
-    # Save repo to recent list when accessed
     save_recent_repo(repo_path)
     return list_commits(repo_path)
 
-
-@app.post("/modify-commit/")
-def post_modify_commit(modification: CommitModification):
-    return modify_commit(modification)
-
-
-@app.get("/recent-repos/")
-def get_recent_repos():
-    return load_recent_repos()
+@router.post("/modify")
+async def post_modify_commit(modification: CommitModification):
+    return modify_commit(modification) 
