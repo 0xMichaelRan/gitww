@@ -220,7 +220,7 @@ export default function GitWW() {
           <h2 className="text-lg font-semibold mb-4">Contributions in the Last Year</h2>
           <div className="grid grid-cols-7 gap-1">
             {getCommitsFromLastYear().map((commit, index) => (
-              <TooltipProvider key={index}>
+              <TooltipProvider key={commit.hash}>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <div
