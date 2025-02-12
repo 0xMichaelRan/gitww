@@ -11,36 +11,84 @@ import { Calendar as CalendarComponent } from "@/components/ui/calendar"
 import { format } from "date-fns"
 import Link from 'next/link'
 
-// Mock data for selected commits
-const selectedCommits = [
+import { useRouter, useSearchParams } from 'next/navigation'
+
+// Default mock data in case no state is passed
+const defaultCommits = [
   { id: 1, hash: 'a1b2c3d', message: 'Initial commit', author: 'Alice', date: '2023-04-01T12:00:00' },
   { id: 2, hash: 'e4f5g6h', message: 'Add new feature', author: 'Bob', date: '2023-04-02T14:30:00' },
   { id: 3, hash: 'i7j8k9l', message: 'Fix bug in login', author: 'Charlie', date: '2023-04-03T09:15:00' },
-]
+];
 
 export default function BulkEditPage() {
-  const [commits, setCommits] = React.useState(selectedCommits)
-  const [startDate, setStartDate] = React.useState<Date>()
-  const [endDate, setEndDate] = React.useState<Date>()
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
+
+  // Try to get commits from router state, fallback to mock
+  let initialCommits = defaultCommits;
+  try {
+    const commitsParam = searchParams.get('commits');
+    if (commitsParam) {
+      initialCommits = JSON.parse(decodeURIComponent(commitsParam));
+    }
+  } catch (e) {
+    // fallback to defaultCommits
+  }
+
+  const [commits, setCommits] = React.useState(initialCommits);
+  const [startDate, setStartDate] = React.useState<Date>();
+  const [endDate, setEndDate] = React.useState<Date>();
 
   const handleDateChange = (id: number, newDate: string) => {
     setCommits(commits.map(commit =>
       commit.id === id ? { ...commit, date: newDate } : commit
-    ))
-  }
+    ));
+  };
 
   const generateRandomDates = () => {
-    if (!startDate || !endDate) return
-
+    if (!startDate || !endDate) return;
     const newCommits = commits.map(commit => {
       const randomTimestamp = new Date(
         startDate.getTime() + Math.random() * (endDate.getTime() - startDate.getTime())
-      ).toISOString()
-      return { ...commit, date: randomTimestamp }
-    })
+      ).toISOString().slice(0, 16); // match datetime-local input
+      return { ...commit, date: randomTimestamp };
+    });
+    setCommits(newCommits);
+  };
 
-    setCommits(newCommits)
-  }
+  const handleCommitter = async () => {
+    setLoading(true); setError(null);
+    try {
+      const res = await fetch('/api/bulk-edit/committer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ commits }),
+      });
+      if (!res.ok) throw new Error(await res.text());
+    } catch (e: any) {
+      setError(e.message || 'Error running committer command');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAuthor = async () => {
+    setLoading(true); setError(null);
+    try {
+      const res = await fetch('/api/bulk-edit/author', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ commits }),
+      });
+      if (!res.ok) throw new Error(await res.text());
+    } catch (e: any) {
+      setError(e.message || 'Error running author command');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <main className="flex-1 p-6 overflow-auto">
@@ -82,12 +130,13 @@ export default function BulkEditPage() {
           <Button onClick={generateRandomDates} disabled={!startDate || !endDate}>
             Randomize
           </Button>
-          <Button onClick={() => console.log('Modify Committer')}>
-            Committer
+          <Button onClick={handleCommitter} disabled={loading}>
+            {loading ? 'Running...' : 'Committer'}
           </Button>
-          <Button onClick={() => console.log('Modify Author')}>
-            Author
+          <Button onClick={handleAuthor} disabled={loading}>
+            {loading ? 'Running...' : 'Author'}
           </Button>
+          {error && <span className="text-red-500 ml-4">{error}</span>}
         </div>
       </div>
       <Card>
@@ -105,15 +154,15 @@ export default function BulkEditPage() {
                       <div className="text-xs truncate">{commit.message}</div>
                     </td>
                     <td className="p-2 w-1/3">
-                      <div className="text-xs">Author: {commit.author}</div>
-                      <div className="text-xs">Committer: {commit.author}</div>
+                      <div className="text-xs">Author: {commit.author_name || commit.author || ''}</div>
+<div className="text-xs">Committer: {commit.committer_name || commit.author || ''}</div>
                     </td>
                     <td className="p-2 w-1/3">
-                      <div className="text-xs">Old: {new Date(commit.date).toLocaleString()}</div>
+                      <div className="text-xs">Old: {commit.date ? new Date(commit.date).toLocaleString() : ''}</div>
                       <div>
                         <Input
                           type="datetime-local"
-                          value={commit.date.slice(0, 16)}
+                          value={commit.date.length > 16 ? commit.date.slice(0, 16) : commit.date}
                           onChange={(e) => handleDateChange(commit.id, e.target.value)}
                           className="w-full text-xs p-1 h-7"
                         />
