@@ -13,31 +13,33 @@ import Link from 'next/link'
 
 import { useRouter, useSearchParams } from 'next/navigation'
 
-// Default mock data in case no state is passed
-const defaultCommits = [
-  { id: 1, hash: 'a1b2c3d', message: 'Initial commit', author: 'Alice', date: '2023-04-01T12:00:00' },
-  { id: 2, hash: 'e4f5g6h', message: 'Add new feature', author: 'Bob', date: '2023-04-02T14:30:00' },
-  { id: 3, hash: 'i7j8k9l', message: 'Fix bug in login', author: 'Charlie', date: '2023-04-03T09:15:00' },
-];
-
 export default function BulkEditPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
-  // Try to get commits from router state, fallback to mock
-  let initialCommits = defaultCommits;
+  // Get commits from router state, searchParams, or window.selectedCommits
+  let initialCommits: any[] = [];
   try {
     const commitsParam = searchParams.get('commits');
     if (commitsParam) {
       initialCommits = JSON.parse(decodeURIComponent(commitsParam));
+    } else if (typeof window !== 'undefined' && (window as any).selectedCommits) {
+      initialCommits = (window as any).selectedCommits;
     }
   } catch (e) {
-    // fallback to defaultCommits
+    // fallback to empty
   }
 
   const [commits, setCommits] = React.useState(initialCommits);
+
+  // If no commits, show error/empty state
+  React.useEffect(() => {
+    if (!commits || commits.length === 0) {
+      setError('No commits selected. Please select commits from the previous page.');
+    }
+  }, [commits]);
   const [startDate, setStartDate] = React.useState<Date>();
   const [endDate, setEndDate] = React.useState<Date>();
 

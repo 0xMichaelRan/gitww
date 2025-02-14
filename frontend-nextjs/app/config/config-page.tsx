@@ -10,33 +10,41 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import Link from 'next/link'
 import React, { useEffect } from 'react';
 
-// Mock data for editable text and code snippets
-const initialSnippets = [
-  { id: 1, title: 'Git Configuration', content: '# Set your username\ngit config --global user.name "Your Name"\n\n# Set your email\ngit config --global user.email "your.email@example.com"' },
-  { id: 2, title: 'Common Git Commands', content: '# Initialize a new repository\ngit init\n\n# Add files to staging\ngit add .\n\n# Commit changes\ngit commit -m "Your commit message"' },
-  { id: 3, title: 'Branching', content: '# Create a new branch\ngit branch new-feature\n\n# Switch to the new branch\ngit checkout new-feature\n\n# Create and switch in one command\ngit checkout -b another-feature' },
-]
+// Snippets will be populated from user-selected commits
+const initialSnippets = [];
 
 export default function ConfigPage() {
   const [masterDirectory, setMasterDirectory] = React.useState<string>('')
   const [defaultUsername, setDefaultUsername] = React.useState('John Doe')
   const [defaultEmail, setDefaultEmail] = React.useState('john.doe@example.com')
   const [snippets, setSnippets] = React.useState(initialSnippets)
-  const [editingSnippet, setEditingSnippet] = React.useState<number | null>(null)
-  const [nextSnippetId, setNextSnippetId] = React.useState(4)
+const [editingSnippet, setEditingSnippet] = React.useState<number | null>(null)
+const [nextSnippetId, setNextSnippetId] = React.useState(1)
 
-  // Load masterDirectory from local storage on component mount
-  useEffect(() => {
-    const savedDirectory = localStorage.getItem('masterDirectory')
-    if (savedDirectory) {
-      setMasterDirectory(savedDirectory)
+// Load masterDirectory from local storage on component mount
+useEffect(() => {
+  const savedDirectory = localStorage.getItem('masterDirectory')
+  if (savedDirectory) {
+    setMasterDirectory(savedDirectory)
+  }
+  // Attempt to get selected commits from global (populated by main page)
+  if (typeof window !== 'undefined' && (window as any).selectedCommits) {
+    const commits = (window as any).selectedCommits;
+    if (Array.isArray(commits)) {
+      setSnippets(commits.map((commit: any, idx: number) => ({
+        id: idx + 1,
+        title: `Commit ${commit.hash || idx + 1}`,
+        content: commit.message || ''
+      })));
+      setNextSnippetId(commits.length + 1);
     }
-  }, [])
+  }
+}, []);
 
-  // Save masterDirectory to local storage whenever it changes
-  useEffect(() => {
-    localStorage.setItem('masterDirectory', masterDirectory)
-  }, [masterDirectory])
+// Save masterDirectory to local storage whenever it changes
+useEffect(() => {
+  localStorage.setItem('masterDirectory', masterDirectory)
+}, [masterDirectory])
 
   const handleSnippetEdit = (id: number) => {
     setEditingSnippet(id)
