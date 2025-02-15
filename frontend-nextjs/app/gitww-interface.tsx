@@ -44,7 +44,22 @@ interface Commit {
   committer_email: string;
 }
 
-export default function GitWW() {
+// Props for GitWW
+interface GitWWProps {
+  onBulkEdit?: (selectedCommits: Commit[]) => void;
+}
+
+interface Commit {
+  hash: string;
+  date: string;
+  message: string;
+  author_name: string;
+  author_email: string;
+  committer_name: string;
+  committer_email: string;
+}
+
+export default function GitWW({ onBulkEdit }: GitWWProps) {
   const [commits, setCommits] = React.useState<Commit[]>([])
   const [selectedCommits, setSelectedCommits] = React.useState<number[]>([])
   const [lastSelectedIndex, setLastSelectedIndex] = React.useState<number | null>(null)
@@ -168,12 +183,18 @@ export default function GitWW() {
         <h1 className="text-2xl font-bold">Commit History</h1>
         <div className="flex space-x-2">
           {selectedCommits.length > 1 ? (
-            <Link href="/bulk-edit" passHref>
-              <Button variant="outline">
-                <Edit className="mr-2 h-4 w-4" />
-                Modify
-              </Button>
-            </Link>
+            <Button
+              variant="outline"
+              onClick={() => {
+                if (onBulkEdit) {
+                  const selected = selectedCommits.map(i => commits[i]);
+                  onBulkEdit(selected);
+                }
+              }}
+            >
+              <Edit className="mr-2 h-4 w-4" />
+              Modify
+            </Button>
           ) : (
             <Button variant="outline" onClick={handleModifyClick} disabled={selectedCommits.length !== 1 || loading}>
               <Edit className="mr-2 h-4 w-4" />
