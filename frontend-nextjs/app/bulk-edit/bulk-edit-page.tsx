@@ -150,7 +150,7 @@ export default function BulkEditPage() {
             <table className="w-full text-sm">
               <tbody>
                 {commits.map((commit, index) => (
-                  <tr key={commit.id} className={index % 2 === 0 ? 'bg-blue-50' : 'bg-pink-50'}>
+                  <tr key={commit.hash || index} className={index % 2 === 0 ? 'bg-blue-50' : 'bg-pink-50'}>
                     <td className="p-2 w-1/3">
                       <div className="font-mono text-xs">{commit.hash}</div>
                       <div className="text-xs truncate">{commit.message}</div>
