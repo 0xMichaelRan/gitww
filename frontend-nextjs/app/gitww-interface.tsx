@@ -213,7 +213,7 @@ export default function GitWW({ onBulkEdit }: GitWWProps) {
             {Array.isArray(commits) && commits.length > 0 ? (
               commits.map((commit, index) => (
                 <div
-                  key={commit.hash}
+                  key={commit.hash || index}
                   className={`flex items-center p-2 rounded-md cursor-pointer ${
                     selectedCommits.includes(index) ? 'bg-primary/10' : 'hover:bg-muted'
                   }`}
@@ -241,7 +241,7 @@ export default function GitWW({ onBulkEdit }: GitWWProps) {
           <h2 className="text-lg font-semibold mb-4">Contributions in the Last Year</h2>
           <div className="grid grid-cols-7 gap-1">
             {getCommitsFromLastYear().map((commit, index) => (
-              <TooltipProvider key={commit.hash}>
+              <TooltipProvider key={commit.hash || index}>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <div

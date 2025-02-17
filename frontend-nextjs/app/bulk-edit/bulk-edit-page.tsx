@@ -63,7 +63,7 @@ export default function BulkEditPage() {
   const handleCommitter = async () => {
     setLoading(true); setError(null);
     try {
-      const res = await fetch('/api/bulk-edit/committer', {
+      const res = await fetch('/bulk-edit/change-committer', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ commits }),
@@ -79,7 +79,7 @@ export default function BulkEditPage() {
   const handleAuthor = async () => {
     setLoading(true); setError(null);
     try {
-      const res = await fetch('/api/bulk-edit/author', {
+      const res = await fetch('/bulk-edit/change-author', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ commits }),
