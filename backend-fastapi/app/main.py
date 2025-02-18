@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
-from .api import commits, recent_repos
+from .api import commits, recent_repos, bulk_edit
 
 # Load environment variables from .env file
 load_dotenv()
@@ -19,4 +19,5 @@ app.add_middleware(
 
 # Include routers
 app.include_router(commits.router)
-app.include_router(recent_repos.router) 
+app.include_router(recent_repos.router)
+app.include_router(bulk_edit.router)
