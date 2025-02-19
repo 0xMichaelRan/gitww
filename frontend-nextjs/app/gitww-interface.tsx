@@ -140,7 +140,7 @@ export default function GitWW({ onBulkEdit }: GitWWProps) {
     setLoading(true);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/modify-commit`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/commits/modify`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

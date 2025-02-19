@@ -54,8 +54,13 @@ export default function BulkEditPage() {
     const newCommits = commits.map(commit => {
       const randomTimestamp = new Date(
         startDate.getTime() + Math.random() * (endDate.getTime() - startDate.getTime())
-      ).toISOString().slice(0, 16); // match datetime-local input
-      return { ...commit, date: randomTimestamp };
+      );
+      // Format the date in the format expected by git: "YYYY-MM-DD HH:mm:ss +0000"
+      const formattedDate = randomTimestamp.toISOString()
+        .replace('T', ' ')
+        .replace('Z', ' +0000')
+        .slice(0, 19);
+      return { ...commit, date: formattedDate };
     });
     setCommits(newCommits);
   };
@@ -63,10 +68,17 @@ export default function BulkEditPage() {
   const handleCommitter = async () => {
     setLoading(true); setError(null);
     try {
-      const res = await fetch('/bulk-edit/change-committer', {
+      if (!commits || commits.length === 0) {
+        throw new Error('No commits selected');
+      }
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/bulk-edit/change-committer`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ commits }),
+        body: JSON.stringify({
+          repo_path: process.env.NEXT_PUBLIC_REPO_PATH || '',
+          command: 'git filter-branch -f --env-filter "export GIT_COMMITTER_NAME=\'$(git config user.name)\'; export GIT_COMMITTER_EMAIL=\'$(git config user.email)\'; export GIT_COMMITTER_DATE=\'$(git show -s --format=%cD $GIT_COMMIT)\'" -- --all'
+        }),
       });
       if (!res.ok) throw new Error(await res.text());
     } catch (e: any) {
@@ -79,10 +91,17 @@ export default function BulkEditPage() {
   const handleAuthor = async () => {
     setLoading(true); setError(null);
     try {
-      const res = await fetch('/bulk-edit/change-author', {
+      if (!commits || commits.length === 0) {
+        throw new Error('No commits selected');
+      }
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/bulk-edit/change-author`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ commits }),
+        body: JSON.stringify({
+          repo_path: process.env.NEXT_PUBLIC_REPO_PATH || '',
+          command: 'git filter-branch -f --env-filter "export GIT_AUTHOR_NAME=\'$(git config user.name)\'; export GIT_AUTHOR_EMAIL=\'$(git config user.email)\'; export GIT_AUTHOR_DATE=\'$(git show -s --format=%aD $GIT_COMMIT)\'" -- --all'
+        }),
       });
       if (!res.ok) throw new Error(await res.text());
     } catch (e: any) {
