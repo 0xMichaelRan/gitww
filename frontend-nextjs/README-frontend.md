@@ -1,3 +1,4 @@
+this experimental project was built by v0, and later deprecated. 
 
 ```
 pnpm create next-app frontend-nextjs
