@@ -7,6 +7,7 @@ from ..api.recent_repos import save_recent_repo
 
 router = APIRouter(prefix="/commits", tags=["commits"])
 
+
 def list_commits(repo_path):
     try:
         repo = git.Repo(repo_path)
@@ -27,6 +28,7 @@ def list_commits(repo_path):
         return commit_list
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error listing commits: {e}")
+
 
 def modify_commit(modification: CommitModification):
     try:
@@ -49,6 +51,7 @@ def modify_commit(modification: CommitModification):
     except subprocess.CalledProcessError as e:
         raise HTTPException(status_code=500, detail=f"Error modifying commit: {e}")
 
+
 @router.get("/")
 async def get_commits(repo_path: str):
     if not repo_path:
@@ -56,6 +59,7 @@ async def get_commits(repo_path: str):
     save_recent_repo(repo_path)
     return list_commits(repo_path)
 
+
 @router.post("/modify")
 async def post_modify_commit(modification: CommitModification):
-    return modify_commit(modification) 
+    return modify_commit(modification)

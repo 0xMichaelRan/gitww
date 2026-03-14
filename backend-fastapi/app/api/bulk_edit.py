@@ -6,9 +6,11 @@ import subprocess
 
 router = APIRouter(prefix="/bulk-edit", tags=["bulk-edit"])
 
+
 class BulkEditRequest(BaseModel):
     repo_path: str
     command: str
+
 
 @router.post("/change-committer")
 async def change_committer(request: BulkEditRequest):
@@ -20,6 +22,7 @@ async def change_committer(request: BulkEditRequest):
         return {"status": "success"}
     except subprocess.CalledProcessError as e:
         raise HTTPException(status_code=500, detail=f"Error changing committer: {e}")
+
 
 @router.post("/change-author")
 async def change_author(request: BulkEditRequest):
